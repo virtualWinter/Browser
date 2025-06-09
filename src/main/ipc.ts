@@ -3,15 +3,13 @@ import { execSync } from 'child_process'
 import { Browser } from '@main/browser'
 
 /**
- * Sets up IPC (Inter-Process Communication) handlers for communication between the main process and renderer processes.
- * This function registers listeners for various events such as window manipulation (minimize, maximize, close),
- * webview bounds updates, navigation controls (navigate, go back, go forward, reload, stop),
- * developer tools, and tab management (create, switch, close, get info).
- * It also forwards events from the Browser class to the renderer process.
+ * Configures IPC handlers and event forwarding between the Electron main process and renderer processes.
  *
- * @param mainWindow The main Electron BrowserWindow instance.
- * @param browser The Browser instance managing tabs and webviews.
- * @param openSettingsWindowCallback A function to call to open or focus the settings window.
+ * Registers IPC channels for window controls, tab and webview management, navigation, developer tools, settings window operations, and application version information. Forwards relevant events from the {@link Browser} instance to the renderer. Enables the renderer to control and query the main window, tabs, and settings window, and to retrieve system and application version details.
+ *
+ * @param mainWindow - The main application window.
+ * @param browser - The browser instance managing tabs and webviews.
+ * @param openSettingsWindowCallback - Callback to open or focus the settings window, returning its instance or null.
  */
 export function setupIpcHandlers(
   mainWindow: BrowserWindow,

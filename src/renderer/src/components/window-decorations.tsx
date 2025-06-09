@@ -53,7 +53,7 @@ export function WindowDecorations({
     // The order is Close (red), Minimize (yellow), Maximize (green).
     if (position === 'left') {
       return (
-        <div className={cn(baseClasses, 'gap-2')}>
+        <div className={cn(baseClasses, 'gap-2', 'no-drag')}>
           <button
             aria-label="Close window"
             className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700"
@@ -87,7 +87,7 @@ export function WindowDecorations({
       // If macOS buttons are on the right (unconventional, but supported).
       // Order: Maximize (green), Minimize (yellow), Close (red).
       return (
-        <div className={cn(baseClasses, 'gap-2')}>
+        <div className={cn(baseClasses, 'gap-2', 'no-drag')}>
           <button
             aria-label="Maximize or unmaximize window"
             className="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-700"
@@ -124,7 +124,7 @@ export function WindowDecorations({
   // Order: Minimize, Maximize, Close. Reversed if position is 'left'.
   if (type === 'windows') {
     return (
-      <div className={cn(baseClasses, orderedClasses)}>
+      <div className={cn(baseClasses, orderedClasses, 'no-drag')}>
         <button
           aria-label="Minimize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
@@ -166,7 +166,7 @@ export function WindowDecorations({
   // Order: Minimize, Maximize, Close. Reversed if position is 'left'.
   if (type === 'windows11') {
     return (
-      <div className={cn(baseClasses, orderedClasses)}>
+      <div className={cn(baseClasses, orderedClasses, 'no-drag')}>
         <button
           aria-label="Minimize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring"

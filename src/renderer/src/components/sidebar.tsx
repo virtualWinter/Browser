@@ -40,12 +40,14 @@ interface SidebarProps {
 }
 
 /**
- * Sidebar component for the browser application.
- * It displays window decorations, navigation controls (back, forward, reload),
- * an address bar, a list of open tabs, and controls for creating new tabs and accessing settings.
+ * Renders the sidebar for the browser application, providing window controls, navigation buttons, an address bar, tab management, and access to settings and downloads.
  *
- * @param {SidebarProps} props - The props for the Sidebar component.
- * @returns {React.JSX.Element} The rendered Sidebar component.
+ * The sidebar synchronizes tab and navigation state with the main process, allowing users to switch, create, and close tabs, navigate within the active tab, and access additional controls.
+ *
+ * @param className - Optional CSS class for the sidebar container.
+ * @param onSettingsClick - Optional callback invoked when the settings button is clicked.
+ * @param showSettings - Optional flag to toggle the settings icon; defaults to false.
+ * @returns The rendered sidebar component.
  */
 export function Sidebar({
   className,

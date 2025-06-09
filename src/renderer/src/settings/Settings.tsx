@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { WindowDecorations } from './components/window-decorations'
-import { Input } from './components/ui/input' // Assuming Input component path
-import { Button } from './components/ui/button' // Assuming Button component path
-import { Search, Cog, Shield, Bell, Info } from 'lucide-react' // Example icons
+import { WindowDecorations } from '../components/window-decorations' // Corrected path
+import { Input } from '../components/ui/input' // Corrected path
+import { Button } from '../components/ui/button' // Corrected path
+import { Search, Cog, Shield, Bell, Info } from 'lucide-react'
 
 // Match the main window's decoration style
 const DECORATION_TYPE: 'macos' | 'windows' | 'windows11' = 'macos'
@@ -15,10 +15,10 @@ interface SettingsCategory {
   content: React.ReactNode | ((info: AppVersionInfo | null) => React.ReactNode)
 }
 
-import GeneralSettingsPage from './pages/settings/GeneralSettingsPage'
-import SecuritySettingsPage from './pages/settings/SecuritySettingsPage'
-import NotificationsSettingsPage from './pages/settings/NotificationsSettingsPage'
-import AboutSettingsPage, { AppVersionInfo } from './pages/settings/AboutSettingsPage'
+import GeneralSettingsPage from './pages/GeneralSettingsPage' // Adjusted path
+import SecuritySettingsPage from './pages/SecuritySettingsPage' // Adjusted path
+import NotificationsSettingsPage from './pages/NotificationsSettingsPage' // Adjusted path
+import AboutSettingsPage, { AppVersionInfo } from './pages/AboutSettingsPage' // Adjusted path
 
 const settingsCategoriesData = (appInfo: AppVersionInfo | null): SettingsCategory[] => [
   {
@@ -81,7 +81,7 @@ const SettingsApp: React.FC = () => {
     <>
       {/* Draggable title bar area */}
       <div
-        className="fixed top-0 left-0 w-full h-8 flex items-center px-2 z-50 bg-sidebar" // Added z-50
+        className="fixed top-0 left-0 w-full h-8 flex items-center px-2 z-50 bg-sidebar"
         style={{ WebkitAppRegion: 'drag', userSelect: 'none' } as React.CSSProperties}
       >
         {/* Window Decorations */}
@@ -104,7 +104,7 @@ const SettingsApp: React.FC = () => {
               placeholder="Search settings..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10" // Added padding for icon
+              className="w-full pl-10"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>

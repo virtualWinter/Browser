@@ -184,11 +184,11 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
       {/* Top section: Window decorations, navigation, and address bar. Draggable area. */}
       <div className="p-3 space-y-3 draggable">
         {/* Window decorations and navigation controls. Non-draggable area within draggable parent. */}
-        <div className="flex items-center justify-between no-drag">
+        <div className="flex items-center justify-between">
           {DECORATION_POSITION === 'left' ? (
             <>
               <WindowDecorations type={DECORATION_TYPE} position={DECORATION_POSITION} />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 no-drag">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -222,7 +222,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
             </>
           ) : (
             <>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 no-drag">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -259,7 +259,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
         </div>
 
         {/* Address bar input field. Non-draggable area. */}
-        <div>
+        <div className="no-drag">
           <form onSubmit={handleNavigate}>
             <Input
               type="url"
@@ -274,7 +274,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
       </div>
 
       {/* Middle section: List of tabs. Draggable area for reordering (if implemented). */}
-      <div className="flex-1 overflow-y-auto draggable">
+      <div className="flex-1 overflow-y-auto">
         <div className="p-3 space-y-1">
           {/* Render each tab */}
           {tabs.map((tab) => (
@@ -336,7 +336,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
       </div>
 
       {/* Bottom section: Settings and other controls. Draggable area. */}
-      <div className="p-3 draggable">
+      <div className="p-3">
         {/* Settings and Download buttons. Non-draggable. */}
         <div className="flex items-center justify-between no-drag">
           <Button

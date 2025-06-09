@@ -1,4 +1,4 @@
-import '../src/globals.css' // Adjusted path for global styles
+import '../globals.css' // Adjusted path for global styles
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import SettingsApp from './Settings' // Adjusted path for SettingsApp

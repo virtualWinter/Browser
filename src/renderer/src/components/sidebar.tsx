@@ -192,15 +192,16 @@ export function Sidebar({
       {/* Top section: Window decorations, navigation, and address bar. Draggable area. */}
       <div className="p-3 space-y-3 draggable">
         {/* Window decorations and navigation controls. Non-draggable area within draggable parent. */}
-        <div className="flex items-center justify-between no-drag">
+        <div className="flex items-center">
           {DECORATION_POSITION === 'left' ? (
             <>
               <WindowDecorations type={DECORATION_TYPE} position={DECORATION_POSITION} />
-              <div className="flex items-center gap-1">
+              <div className="flex-grow draggable"></div> {/* Draggable spacer */}
+              <div className="flex items-center gap-1 no-drag">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.goBack()}
                   disabled={!canGoBack}
                   aria-label="Go back"
@@ -210,7 +211,7 @@ export function Sidebar({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.goForward()}
                   disabled={!canGoForward}
                   aria-label="Go forward"
@@ -220,7 +221,7 @@ export function Sidebar({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.reload()}
                   aria-label="Reload page"
                 >
@@ -230,11 +231,11 @@ export function Sidebar({
             </>
           ) : (
             <>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 no-drag">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.goBack()}
                   disabled={!canGoBack}
                   aria-label="Go back"
@@ -244,7 +245,7 @@ export function Sidebar({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.goForward()}
                   disabled={!canGoForward}
                   aria-label="Go forward"
@@ -254,20 +255,21 @@ export function Sidebar({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 no-drag"
                   onClick={() => window.api.reload()}
                   aria-label="Reload page"
                 >
                   <RotateCcw className="h-3 w-3 text-white" />
                 </Button>
               </div>
+              <div className="flex-grow draggable"></div> {/* Draggable spacer */}
               <WindowDecorations type={DECORATION_TYPE} position={DECORATION_POSITION} />
             </>
           )}
         </div>
 
         {/* Address bar input field. Non-draggable area. */}
-        <div>
+        <div className="no-drag">
           <form onSubmit={handleNavigate}>
             <Input
               type="url"
@@ -282,7 +284,7 @@ export function Sidebar({
       </div>
 
       {/* Middle section: List of tabs. Draggable area for reordering (if implemented). */}
-      <div className="flex-1 overflow-y-auto draggable">
+      <div className="flex-1 overflow-y-auto">
         <div className="p-3 space-y-1">
           {/* Render each tab */}
           {tabs.map((tab) => (
@@ -344,7 +346,7 @@ export function Sidebar({
       </div>
 
       {/* Bottom section: Settings and other controls. Draggable area. */}
-      <div className="p-3 draggable">
+      <div className="p-3">
         {/* Settings and Download buttons. Non-draggable. */}
         <div className="flex items-center justify-between no-drag">
           <Button

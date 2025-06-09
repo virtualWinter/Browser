@@ -1,0 +1,36 @@
+<!doctype html>
+<!--
+  Main HTML file for the renderer process.
+  This file sets up the basic HTML structure, defines the Content Security Policy,
+  and loads the main React application.
+-->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Content Security Policy (CSP) helps prevent XSS attacks by defining
+      which sources of content are allowed to be loaded.
+      - default-src 'self' https: : Allows loading resources from the same origin and HTTPS sources.
+      - script-src 'self': Allows scripts only from the same origin.
+      - style-src 'self' 'unsafe-inline': Allows stylesheets from the same origin and inline styles.
+        ('unsafe-inline' is often needed for UI libraries but consider stricter policies if possible).
+      - img-src 'self' data: https:: Allows images from the same origin, data URIs, and HTTPS sources.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
+    />
+    <!-- Consider adding a <title> tag here for the application window -->
+    <!-- <title>My Electron App</title> -->
+  </head>
+
+  <body>
+    <!-- The root div where the React application will be mounted. -->
+    <div id="root"></div>
+    <!--
+      Loads the main TypeScript/React entry point for the renderer application.
+      'type="module"' enables ES module syntax.
+    -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

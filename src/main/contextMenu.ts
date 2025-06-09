@@ -32,8 +32,8 @@ export function setupContextMenu(): void {
         click: () => {
           // Note: webContents.goBack() is the correct method,
           // navigationHistory is for managing history, not direct navigation.
-          if (webContents.canGoBack()) {
-            webContents.goBack()
+          if (webContents.navigationHistory.canGoBack()) {
+            webContents.navigationHistory.goBack()
           }
         }
       })
@@ -42,8 +42,8 @@ export function setupContextMenu(): void {
       new MenuItem({
         label: 'Forward',
         click: () => {
-          if (webContents.canGoForward()) {
-            webContents.goForward()
+          if (webContents.navigationHistory.canGoForward()) {
+            webContents.navigationHistory.goForward()
           }
         }
       })

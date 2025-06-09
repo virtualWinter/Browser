@@ -189,10 +189,11 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
             <>
               <WindowDecorations type={DECORATION_TYPE} position={DECORATION_POSITION} />
               <div className="flex-grow draggable"></div> {/* Draggable spacer */}
+              <div className="flex items-center gap-1 no-drag">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 no-drag"
+                  className="h-6 w-6 p-0"
                   onClick={() => window.api.goBack()}
                   disabled={!canGoBack}
                   aria-label="Go back"
@@ -202,7 +203,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 no-drag"
+                  className="h-6 w-6 p-0"
                   onClick={() => window.api.goForward()}
                   disabled={!canGoForward}
                   aria-label="Go forward"
@@ -212,7 +213,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 no-drag"
+                  className="h-6 w-6 p-0"
                   onClick={() => window.api.reload()}
                   aria-label="Reload page"
                 >

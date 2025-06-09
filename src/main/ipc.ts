@@ -70,9 +70,9 @@ export function setupIpcHandlers(
    * Navigates the current tab back in its history.
    */
   ipcMain.on('go-back', () => {
-    if (browser.currentTab && browser.currentTab.view.webContents.canGoBack()) {
+    if (browser.currentTab && browser.currentTab.view.webContents.navigationHistory.canGoBack()) {
       // Corrected to use webContents.goBack() directly
-      browser.currentTab.view.webContents.goBack()
+      browser.currentTab.view.webContents.navigationHistory.goBack()
     }
   })
 
@@ -80,9 +80,12 @@ export function setupIpcHandlers(
    * Navigates the current tab forward in its history.
    */
   ipcMain.on('go-forward', () => {
-    if (browser.currentTab && browser.currentTab.view.webContents.canGoForward()) {
+    if (
+      browser.currentTab &&
+      browser.currentTab.view.webContents.navigationHistory.canGoForward()
+    ) {
       // Corrected to use webContents.goForward() directly
-      browser.currentTab.view.webContents.goForward()
+      browser.currentTab.view.webContents.navigationHistory.goForward()
     }
   })
 
@@ -177,7 +180,9 @@ export function setupIpcHandlers(
    * @returns A promise that resolves to true if the tab can go back, false otherwise.
    */
   ipcMain.handle('can-go-back', () => {
-    return browser.currentTab ? browser.currentTab.view.webContents.canGoBack() : false
+    return browser.currentTab
+      ? browser.currentTab.view.webContents.navigationHistory.canGoBack()
+      : false
   })
 
   /**
@@ -185,7 +190,9 @@ export function setupIpcHandlers(
    * @returns A promise that resolves to true if the tab can go forward, false otherwise.
    */
   ipcMain.handle('can-go-forward', () => {
-    return browser.currentTab ? browser.currentTab.view.webContents.canGoForward() : false
+    return browser.currentTab
+      ? browser.currentTab.view.webContents.navigationHistory.canGoForward()
+      : false
   })
 
   /**

@@ -37,6 +37,6 @@ $ pnpm build:linux
 
 ### License
 
-Licensed under the ISC license. 
+Licensed under the ISC license.
 
 For more details check [the License.](https://github.com/virtualWinter/Browser/blob/main/LICENSE)

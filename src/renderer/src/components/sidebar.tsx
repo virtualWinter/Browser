@@ -33,10 +33,6 @@ const DECORATION_POSITION: 'left' | 'right' = 'left'
 interface SidebarProps {
   /** Optional CSS class name to apply to the sidebar container. */
   className?: string
-  /** Optional callback function to be called when the settings icon is clicked. */
-  onSettingsClick?: () => void
-  /** Optional boolean to control the visibility of the settings icon (or an alternative, like a close icon). */
-  showSettings?: boolean
 }
 
 /**
@@ -47,11 +43,7 @@ interface SidebarProps {
  * @param {SidebarProps} props - The props for the Sidebar component.
  * @returns {React.JSX.Element} The rendered Sidebar component.
  */
-export function Sidebar({
-  className,
-  onSettingsClick,
-  showSettings = false
-}: SidebarProps): React.JSX.Element {
+export function Sidebar({ className }: SidebarProps): React.JSX.Element {
   // State for managing the list of tabs
   const [tabs, setTabs] = useState<Tab[]>([])
   // State for the ID of the currently active tab
@@ -351,10 +343,10 @@ export function Sidebar({
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-accent no-drag"
-            onClick={onSettingsClick}
-            aria-label={showSettings ? 'Close settings' : 'Open settings'}
+            onClick={() => window.electron.ipcRenderer.send('open-settings-window')}
+            aria-label="Open settings"
           >
-            {showSettings ? <X className="h-3 w-3" /> : <Settings className="h-3 w-3" />}
+            <Settings className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost"

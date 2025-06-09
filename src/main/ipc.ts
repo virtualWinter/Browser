@@ -1,5 +1,5 @@
-import { ipcMain, BrowserWindow } from 'electron'
-
+import { ipcMain, BrowserWindow, app } from 'electron'
+import { execSync } from 'child_process'
 import { Browser } from '@main/browser'
 
 /**
@@ -11,8 +11,13 @@ import { Browser } from '@main/browser'
  *
  * @param mainWindow The main Electron BrowserWindow instance.
  * @param browser The Browser instance managing tabs and webviews.
+ * @param openSettingsWindowCallback A function to call to open or focus the settings window.
  */
-export function setupIpcHandlers(mainWindow: BrowserWindow, browser: Browser): void {
+export function setupIpcHandlers(
+  mainWindow: BrowserWindow,
+  browser: Browser,
+  openSettingsWindowCallback: () => BrowserWindow | null
+): void {
   /**
    * Minimizes the main window.
    */
@@ -221,5 +226,76 @@ export function setupIpcHandlers(mainWindow: BrowserWindow, browser: Browser): v
    */
   browser.events.on('tab-info-updated', (tabId: string) => {
     mainWindow.webContents.send('tab-info-updated', tabId)
+  })
+
+  /**
+   * Opens or focuses the settings window.
+   */
+  ipcMain.on('open-settings-window', () => {
+    openSettingsWindowCallback()
+  })
+
+  /**
+   * Minimizes the settings window.
+   */
+  ipcMain.on('minimize-settings-window', () => {
+    const settingsWin = openSettingsWindowCallback()
+    if (settingsWin && !settingsWin.isDestroyed()) {
+      settingsWin.minimize()
+    }
+  })
+
+  /**
+   * Maximizes or unmaximizes the settings window.
+   */
+  ipcMain.on('maximize-unmaximize-settings-window', () => {
+    const settingsWin = openSettingsWindowCallback()
+    if (settingsWin && !settingsWin.isDestroyed()) {
+      if (settingsWin.isMaximized()) {
+        settingsWin.unmaximize()
+      } else {
+        settingsWin.maximize()
+      }
+    }
+  })
+
+  /**
+   * Closes the settings window.
+   */
+  ipcMain.on('close-settings-window', () => {
+    const settingsWin = openSettingsWindowCallback()
+    if (settingsWin && !settingsWin.isDestroyed()) {
+      settingsWin.close()
+    }
+  })
+
+  /**
+   * Handles a request to get application and system version information.
+   * @returns A promise that resolves to an object containing version details.
+   */
+  ipcMain.handle('get-app-version-info', async () => {
+    let gitBranch: string | undefined
+    try {
+      // Ensure git is installed and the command is run in the project root if necessary
+      // For simplicity, assuming .git is in the app's root or accessible.
+      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', {
+        encoding: 'utf8'
+        // If your .git directory is not in app.getAppPath(), you might need to adjust cwd
+        // cwd: app.getAppPath() // Or specific project root
+      }).trim()
+    } catch (error) {
+      console.error('Failed to get git branch:', error)
+      gitBranch = 'N/A' // Or undefined, or some other placeholder
+    }
+
+    return {
+      electron: process.versions.electron,
+      chrome: process.versions.chrome,
+      node: process.versions.node,
+      v8: process.versions.v8,
+      gitBranch,
+      appName: app.getName(),
+      appVersion: app.getVersion()
+    }
   })
 }

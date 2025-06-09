@@ -21,6 +21,8 @@ interface WindowDecorationsProps {
   position: WindowDecorationPosition
   /** Optional CSS class name to apply to the container element. */
   className?: string
+  /** Specifies which window's controls to use ('main' or 'settings'). Defaults to 'main'. */
+  targetWindow?: 'main' | 'settings'
 }
 
 /**
@@ -37,7 +39,8 @@ interface WindowDecorationsProps {
 export function WindowDecorations({
   type,
   position,
-  className
+  className,
+  targetWindow = 'main' // Default to 'main' if not provided
 }: WindowDecorationsProps): React.JSX.Element | null {
   // Base CSS classes for the container, combined with any custom className.
   const baseClasses = cn('flex items-center', className)
@@ -54,17 +57,29 @@ export function WindowDecorations({
           <button
             aria-label="Close window"
             className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700"
-            onClick={() => window.api.closeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.closeSettingsWindow()
+                : window.api.closeWindow()
+            }
           ></button>
           <button
             aria-label="Minimize window"
             className="w-4 h-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-700"
-            onClick={() => window.api.minimizeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.minimizeSettingsWindow()
+                : window.api.minimizeWindow()
+            }
           ></button>
           <button
             aria-label="Maximize or unmaximize window"
             className="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-700"
-            onClick={() => window.api.maximizeUnmaximizeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.maximizeUnmaximizeSettingsWindow()
+                : window.api.maximizeUnmaximizeWindow()
+            }
           ></button>
         </div>
       )
@@ -76,17 +91,29 @@ export function WindowDecorations({
           <button
             aria-label="Maximize or unmaximize window"
             className="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-700"
-            onClick={() => window.api.maximizeUnmaximizeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.maximizeUnmaximizeSettingsWindow()
+                : window.api.maximizeUnmaximizeWindow()
+            }
           ></button>
           <button
             aria-label="Minimize window"
             className="w-4 h-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-700"
-            onClick={() => window.api.minimizeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.minimizeSettingsWindow()
+                : window.api.minimizeWindow()
+            }
           ></button>
           <button
             aria-label="Close window"
             className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700"
-            onClick={() => window.api.closeWindow()}
+            onClick={() =>
+              targetWindow === 'settings'
+                ? window.api.closeSettingsWindow()
+                : window.api.closeWindow()
+            }
           ></button>
         </div>
       )
@@ -101,21 +128,33 @@ export function WindowDecorations({
         <button
           aria-label="Minimize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
-          onClick={() => window.api.minimizeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.minimizeSettingsWindow()
+              : window.api.minimizeWindow()
+          }
         >
           <Minimize2 className="h-2.5 w-2.5 text-white" />
         </button>
         <button
           aria-label="Maximize or unmaximize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
-          onClick={() => window.api.maximizeUnmaximizeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.maximizeUnmaximizeSettingsWindow()
+              : window.api.maximizeUnmaximizeWindow()
+          }
         >
           <Square className="h-2.5 w-2.5 text-white" />
         </button>
         <button
           aria-label="Close window"
           className="w-8 h-6 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors focus:outline-none focus:ring-1 focus:ring-red-600"
-          onClick={() => window.api.closeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.closeSettingsWindow()
+              : window.api.closeWindow()
+          }
         >
           <X className="h-2.5 w-2.5 text-white" />
         </button>
@@ -131,21 +170,33 @@ export function WindowDecorations({
         <button
           aria-label="Minimize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
-          onClick={() => window.api.minimizeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.minimizeSettingsWindow()
+              : window.api.minimizeWindow()
+          }
         >
           <Minimize2 className="h-2.5 w-2.5 text-white" />
         </button>
         <button
           aria-label="Maximize or unmaximize window"
           className="w-8 h-6 flex items-center justify-center hover:bg-muted/80 rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
-          onClick={() => window.api.maximizeUnmaximizeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.maximizeUnmaximizeSettingsWindow()
+              : window.api.maximizeUnmaximizeWindow()
+          }
         >
           <Square className="h-2.5 w-2.5 text-white" />
         </button>
         <button
           aria-label="Close window"
           className="w-8 h-6 flex items-center justify-center hover:bg-red-500 hover:text-white rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-red-600"
-          onClick={() => window.api.closeWindow()}
+          onClick={() =>
+            targetWindow === 'settings'
+              ? window.api.closeSettingsWindow()
+              : window.api.closeWindow()
+          }
         >
           <X className="h-2.5 w-2.5 text-white" />
         </button>

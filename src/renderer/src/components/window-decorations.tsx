@@ -26,15 +26,11 @@ interface WindowDecorationsProps {
 }
 
 /**
- * WindowDecorations component.
- * Renders platform-specific window control buttons (minimize, maximize, close)
- * for a frameless Electron window.
+ * Renders platform-specific window control buttons for a frameless Electron window.
  *
- * The appearance and order of buttons are determined by the `type` (macos, windows, windows11)
- * and `position` (left, right) props.
+ * Displays minimize, maximize/unmaximize, and close buttons styled according to the specified platform (`macos`, `windows`, or `windows11`) and positioned on either the left or right. Button actions target either the main or settings window, based on the `targetWindow` prop.
  *
- * @param {WindowDecorationsProps} props - The props for the component.
- * @returns {React.JSX.Element | null} The rendered window decoration buttons, or null if the type is unrecognized.
+ * @returns The rendered window decoration buttons, or `null` if the decoration type is unrecognized.
  */
 export function WindowDecorations({
   type,

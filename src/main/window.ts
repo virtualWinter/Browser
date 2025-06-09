@@ -4,22 +4,11 @@ import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 /**
- * Creates and configures the main application window.
+ * Creates and returns the main application window with custom configuration.
  *
- * This function initializes a new BrowserWindow with specific properties:
- * - It's initially hidden (`show: false`) and shown only when 'ready-to-show'.
- * - The menu bar is hidden (`autoHideMenuBar: true`).
- * - It's a frameless window (`frame: false`) for custom window decorations.
- * - Sets the window icon, especially for Linux.
- * - Configures webPreferences:
- *   - Specifies the preload script (`preload: join(__dirname, '../preload/index.js')`).
- *   - Disables the sandbox (`sandbox: false`) if necessary for certain Node.js integrations
- *     in the preload script, though enabling it is generally recommended for security.
+ * The window is initially hidden, frameless, and has its menu bar hidden. It uses a preload script and disables the sandbox for compatibility with certain Node.js integrations. In development, it loads content from the dev server; in production, it loads the bundled HTML file.
  *
- * In development mode, it loads the URL from `ELECTRON_RENDERER_URL` (typically for HMR).
- * In production, it loads the `index.html` file from the renderer build.
- *
- * @returns {BrowserWindow} The created main BrowserWindow instance.
+ * @returns The configured main {@link BrowserWindow} instance.
  */
 export function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -53,23 +42,11 @@ export function createWindow(): BrowserWindow {
 }
 
 /**
- * Creates and configures the settings window.
+ * Creates and returns a configured Electron BrowserWindow for the application settings UI.
  *
- * This function initializes a new BrowserWindow for application settings:
- * - It's initially hidden (`show: false`) and shown only when 'ready-to-show'.
- * - The menu bar is hidden (`autoHideMenuBar: true`).
- * - It's a frameless window (`frame: false`).
- * - On macOS, `titleBarStyle: 'hidden'` is used to allow custom content in the title bar
- *   area while retaining native window controls (traffic lights).
- * - Sets the window icon, especially for Linux.
- * - Configures webPreferences similar to the main window:
- *   - Specifies the preload script.
- *   - Disables the sandbox (consider security implications).
+ * The settings window is initially hidden, frameless, and has its menu bar hidden. On macOS, it uses a hidden title bar style to allow custom content while retaining native window controls. The window loads `settings.html` from the development server in development mode, or from the bundled renderer build in production.
  *
- * In development mode, it loads `settings.html` via the dev server URL.
- * In production, it loads the `settings.html` file from the renderer build.
- *
- * @returns {BrowserWindow} The created settings BrowserWindow instance.
+ * @returns The created settings BrowserWindow instance.
  */
 export function createSettingsWindow(): BrowserWindow {
   const settingsWindow = new BrowserWindow({

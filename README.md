@@ -34,3 +34,9 @@ $ pnpm build:mac
 # For Linux
 $ pnpm build:linux
 ```
+
+### License
+
+Licensed under ISC license. 
+
+For more details check [the License.](https://github.com/virtualWinter/Browser/blob/main/LICENSE)

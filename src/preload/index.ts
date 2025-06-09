@@ -21,6 +21,15 @@ const api = {
   maximizeUnmaximizeWindow: (): void => ipcRenderer.send('maximize-unmaximize-window'),
   /** Sends a message to close the main window. */
   closeWindow: (): void => ipcRenderer.send('close-window'),
+
+  /** Sends a message to minimize the settings window. */
+  minimizeSettingsWindow: (): void => ipcRenderer.send('minimize-settings-window'),
+  /** Sends a message to maximize or unmaximize the settings window. */
+  maximizeUnmaximizeSettingsWindow: (): void =>
+    ipcRenderer.send('maximize-unmaximize-settings-window'),
+  /** Sends a message to close the settings window. */
+  closeSettingsWindow: (): void => ipcRenderer.send('close-settings-window'),
+
   /** Sends a message to navigate the current tab to the given URL. */
   navigate: (url: string): void => ipcRenderer.send('navigate', url),
   /** Sends a message to navigate the current tab back. */
@@ -105,7 +114,20 @@ const api = {
   exposeFunctionToWindow: (functionName: string, func: (...args: unknown[]) => unknown): void => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(window as any)[functionName] = func
-  }
+  },
+  /**
+   * Invokes a handler in the main process to get application and system information.
+   * @returns A promise resolving to an object with version info.
+   */
+  getAppVersionInfo: (): Promise<{
+    electron: string | undefined
+    chrome: string | undefined
+    node: string | undefined
+    v8: string | undefined
+    gitBranch: string | undefined
+    appName: string | undefined
+    appVersion: string | undefined
+  }> => ipcRenderer.invoke('get-app-version-info')
 }
 
 // Use `contextBridge` to securely expose APIs to the renderer process

@@ -1,0 +1,35 @@
+<!doctype html>
+<!--
+  HTML file for the settings window renderer process.
+  This file sets up the basic HTML structure, defines the Content Security Policy,
+  and loads the React application for the settings window.
+-->
+<html class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Content Security Policy (CSP) helps prevent XSS attacks by defining
+      which sources of content are allowed to be loaded.
+      - default-src 'self' https: : Allows loading resources from the same origin and HTTPS sources.
+      - script-src 'self': Allows scripts only from the same origin.
+      - style-src 'self' 'unsafe-inline': Allows stylesheets from the same origin and inline styles.
+        ('unsafe-inline' is often needed for UI libraries but consider stricter policies if possible).
+      - img-src 'self' data: https:: Allows images from the same origin, data URIs, and HTTPS sources.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
+    />
+    <title>Settings</title>
+  </head>
+
+  <body>
+    <!-- The root div where the React application for settings will be mounted. -->
+    <div id="settings-root"></div>
+    <!--
+      Loads the TypeScript/React entry point for the settings window.
+      'type="module"' enables ES module syntax.
+    -->
+    <script type="module" src="/src/settings/main.tsx"></script>
+  </body>
+</html>

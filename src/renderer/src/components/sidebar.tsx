@@ -189,6 +189,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
             <>
               <WindowDecorations type={DECORATION_TYPE} position={DECORATION_POSITION} />
               <div className="flex-grow draggable"></div> {/* Draggable spacer */}
+              <div>
                 <Button
                   variant="ghost"
                   size="sm"

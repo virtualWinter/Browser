@@ -34,20 +34,12 @@ const WCVBounds: React.FC<WCVBoundsProps> = ({ children }) => {
      */
     const updateBounds = (): void => {
       const rect = divElement.getBoundingClientRect()
-      window.electron.ipcRenderer.send('update-webview-bounds', {
+      window.api.updateWebviewBounds({
         x: Math.floor(rect.x),
         y: Math.floor(rect.y),
         width: Math.floor(rect.width),
         height: Math.floor(rect.height)
       })
-      // Expose a function to the window object for the main process to call directly
-      // This is an alternative way for the main process to request current bounds.
-      window.api.exposeFunctionToWindow('getWCVCurrentBounds', () => ({
-        x: Math.floor(rect.x),
-        y: Math.floor(rect.y),
-        width: Math.floor(rect.width),
-        height: Math.floor(rect.height)
-      }))
     }
 
     // Initial update of bounds when the component mounts

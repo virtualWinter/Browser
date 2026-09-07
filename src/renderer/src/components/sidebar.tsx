@@ -113,16 +113,15 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
     }
 
     // Set up listeners for events from the main process
-    window.api.onTabsUpdated(handleTabsUpdated)
-    window.api.onActiveTabChanged(handleActiveTabChanged)
-    window.api.onTabInfoUpdated(handleTabInfoUpdated)
+    const removeTabsUpdated = window.api.onTabsUpdated(handleTabsUpdated)
+    const removeActiveTabChanged = window.api.onActiveTabChanged(handleActiveTabChanged)
+    const removeTabInfoUpdated = window.api.onTabInfoUpdated(handleTabInfoUpdated)
 
     // Cleanup function to remove listeners when the component unmounts.
     return () => {
-      // Access ipcRenderer through window.electron as defined in preload and contextBridge
-      window.electron.ipcRenderer.removeListener('tabs-updated', handleTabsUpdated)
-      window.electron.ipcRenderer.removeListener('active-tab-changed', handleActiveTabChanged)
-      window.electron.ipcRenderer.removeListener('tab-info-updated', handleTabInfoUpdated)
+      removeTabsUpdated()
+      removeActiveTabChanged()
+      removeTabInfoUpdated()
     }
   }, [activeTabId]) // Re-run effect if activeTabId changes to ensure info is up-to-date.
 
@@ -345,7 +344,7 @@ export function Sidebar({ className }: SidebarProps): React.JSX.Element {
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-accent no-drag"
-            onClick={() => window.electron.ipcRenderer.send('open-settings-window')}
+            onClick={() => window.api.openSettingsWindow()}
             aria-label="Open settings"
           >
             <Settings className="h-3 w-3" />

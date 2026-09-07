@@ -13,8 +13,7 @@ import icon from '../../resources/icon.png?asset'
  * - Sets the window icon, especially for Linux.
  * - Configures webPreferences:
  *   - Specifies the preload script (`preload: join(__dirname, '../preload/index.js')`).
- *   - Disables the sandbox (`sandbox: false`) if necessary for certain Node.js integrations
- *     in the preload script, though enabling it is generally recommended for security.
+ *   - Enables sandboxing and context isolation while disabling Node.js integration.
  *
  * In development mode, it loads the URL from `ELECTRON_RENDERER_URL` (typically for HMR).
  * In production, it loads the `index.html` file from the renderer build.
@@ -29,9 +28,9 @@ export function createWindow(): BrowserWindow {
     ...(process.platform === 'linux' ? { icon } : {}), // Set window icon for Linux
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'), // Path to the preload script
-      sandbox: false // Consider implications: true is more secure but limits preload script capabilities.
-      // contextIsolation: true, // Recommended for security, ensure preload script is compatible.
-      // nodeIntegration: false, // Recommended for security.
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
 
@@ -64,7 +63,7 @@ export function createWindow(): BrowserWindow {
  * - Sets the window icon, especially for Linux.
  * - Configures webPreferences similar to the main window:
  *   - Specifies the preload script.
- *   - Disables the sandbox (consider security implications).
+ *   - Enables sandboxing and context isolation while disabling Node.js integration.
  *
  * In development mode, it loads `settings.html` via the dev server URL.
  * In production, it loads the `settings.html` file from the renderer build.
@@ -82,9 +81,9 @@ export function createSettingsWindow(): BrowserWindow {
     ...(process.platform === 'linux' ? { icon } : {}), // Set window icon for Linux
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'), // Path to the preload script
-      sandbox: false // Consider implications: true is more secure but limits preload script capabilities.
-      // contextIsolation: true, // Recommended for security, ensure preload script is compatible.
-      // nodeIntegration: false, // Recommended for security.
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
 

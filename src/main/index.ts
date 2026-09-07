@@ -45,6 +45,7 @@ app.whenReady().then(async () => {
   })
   setupContextMenu()
   await browser.initialize() // Initialize browser components, like fetching initial bounds
+  await browser.createTab()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

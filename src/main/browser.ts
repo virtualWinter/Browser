@@ -26,12 +26,25 @@ export class Browser {
    */
   public currentTab: Tab | null = null
   private lastKnownBounds: { x: number; y: number; width: number; height: number } | null = null
+  private resolveInitialBounds: (() => void) | null = null
 
   /**
-   * Initializes the browser, primarily by fetching initial bounds from the renderer.
+   * Waits briefly for the renderer to report the initial web-content bounds.
    */
   public async initialize(): Promise<void> {
-    await this.getInitialBoundsFromRenderer()
+    if (this.lastKnownBounds) return
+
+    await new Promise<void>((resolve) => {
+      const finish = (): void => {
+        this.resolveInitialBounds = null
+        resolve()
+      }
+      const timeout = setTimeout(finish, 2_000)
+      this.resolveInitialBounds = () => {
+        clearTimeout(timeout)
+        finish()
+      }
+    })
   }
 
   /**
@@ -40,6 +53,7 @@ export class Browser {
    */
   public setLastKnownBounds(bounds: { x: number; y: number; width: number; height: number }): void {
     this.lastKnownBounds = bounds
+    this.resolveInitialBounds?.()
   }
 
   /**
@@ -59,44 +73,6 @@ export class Browser {
   }
 
   /**
-   * Retrieves the initial bounds for new tabs from the renderer process.
-   * This is used to position new BrowserView instances correctly.
-   * @returns A promise that resolves to the bounds object or null if not available.
-   */
-  private async getInitialBoundsFromRenderer(): Promise<{
-    x: number
-    y: number
-    width: number
-    height: number
-  } | null> {
-    try {
-      // Script to execute in the renderer process to get the bounds
-      // of the web-content-view element.
-      const script = `
-        typeof window.getWCVCurrentBounds === 'function'
-          ? window.getWCVCurrentBounds()
-          : null;
-      `
-      const bounds = await this.mainWindow.webContents.executeJavaScript(script, true)
-      if (
-        bounds &&
-        typeof bounds.x === 'number' &&
-        typeof bounds.y === 'number' &&
-        typeof bounds.width === 'number' &&
-        typeof bounds.height === 'number'
-      ) {
-        this.setLastKnownBounds(bounds)
-        return bounds
-      }
-      console.warn('[Main] getWCVCurrentBounds did not return valid bounds or does not exist.')
-      return null
-    } catch (error) {
-      console.error('[Main] Error getting initial bounds from renderer:', error)
-      return null
-    }
-  }
-
-  /**
    * Creates a new tab.
    * @param url The URL to load in the new tab. Defaults to 'https://www.google.com'.
    * @param activate Whether to activate the new tab immediately. Defaults to true.
@@ -109,9 +85,6 @@ export class Browser {
     userAgent?: string
   ): Promise<Tab> {
     let initialBounds = this.lastKnownBounds
-    if (!initialBounds) {
-      initialBounds = await this.getInitialBoundsFromRenderer()
-    }
     // Fallback to main window content bounds if renderer bounds are not available
     if (!initialBounds) {
       const content = this.mainWindow.getContentBounds()
@@ -165,9 +138,6 @@ export class Browser {
       }
 
       let boundsToSet = this.lastKnownBounds
-      if (!boundsToSet) {
-        boundsToSet = await this.getInitialBoundsFromRenderer()
-      }
       // Fallback to main window content bounds if renderer bounds are not available
       if (!boundsToSet) {
         const content = this.mainWindow.getContentBounds()
@@ -192,6 +162,7 @@ export class Browser {
     if (index !== -1) {
       const tabToClose = this.tabs[index]
       this.mainWindow.removeBrowserView(tabToClose.view) // Remove view from window
+      tabToClose.view.webContents.close()
 
       this.tabs.splice(index, 1) // Remove tab from the list
 

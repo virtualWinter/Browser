@@ -50,9 +50,21 @@ export function setupIpcHandlers(
   ipcMain.on(
     'update-webview-bounds',
     (_event, bounds: { x: number; y: number; width: number; height: number }) => {
+      if (
+        !bounds ||
+        !Number.isFinite(bounds.x) ||
+        !Number.isFinite(bounds.y) ||
+        !Number.isFinite(bounds.width) ||
+        !Number.isFinite(bounds.height) ||
+        bounds.width < 0 ||
+        bounds.height < 0
+      ) {
+        return
+      }
+
+      browser.setLastKnownBounds(bounds)
       if (browser.currentTab) {
         browser.currentTab.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
-        browser.setLastKnownBounds(bounds) // Store for new tabs
       }
     }
   )

@@ -80,8 +80,7 @@ export class Tab {
     this.view.webContents.on('page-favicon-updated', (_event, favicons) => {
       if (favicons && favicons.length > 0) {
         this.favicon = favicons[0]
-        // Potentially emit an event here if the main process needs to know about favicon changes
-        // e.g., this.browser.events.emit('tab-info-updated', this.id);
+        this.browser.events.emit('tab-info-updated', this.id)
       }
     })
 

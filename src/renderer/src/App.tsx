@@ -21,7 +21,7 @@ function App(): React.JSX.Element {
     const handleContextMenu = (event: MouseEvent): void => {
       event.preventDefault() // Prevent the default browser context menu
       // Send an IPC message to the main process to show the custom context menu
-      window.electron.ipcRenderer.send('show-context-menu', event.clientX, event.clientY)
+      window.api.showContextMenu(event.clientX, event.clientY)
     }
 
     // Add the event listener when the component mounts

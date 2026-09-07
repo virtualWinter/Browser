@@ -1,16 +1,9 @@
-import { IpcRenderer } from 'electron'
-// Attempt to use types from @electron-toolkit/preload
-import type { ElectronAPI as ToolkitElectronAPI } from '@electron-toolkit/preload'
-
 export interface TabInfo {
   id: string
   title: string
   url: string
   favicon?: string
 }
-
-// Use the imported ElectronAPI type from the toolkit
-export type ElectronAPI = ToolkitElectronAPI
 
 export interface WindowApi {
   minimizeWindow: () => void
@@ -22,6 +15,8 @@ export interface WindowApi {
   reload: () => void
   stop: () => void
   openDevTools: () => void
+  openSettingsWindow: () => void
+  showContextMenu: (x: number, y: number) => void
   updateWebviewBounds: (bounds: { x: number; y: number; width: number; height: number }) => void
   getTabs: () => Promise<TabInfo[]>
   getActiveTabId: () => Promise<string | null>
@@ -34,10 +29,9 @@ export interface WindowApi {
   canGoForward: () => Promise<boolean>
   isLoading: () => Promise<boolean>
   isWaitingForResponse: () => Promise<boolean>
-  onTabsUpdated: (callback: () => void) => IpcRenderer
-  onActiveTabChanged: (callback: (tabId: string | null) => void) => IpcRenderer
-  onTabInfoUpdated: (callback: (tabId: string) => void) => IpcRenderer
-  exposeFunctionToWindow: (functionName: string, func: (...args: unknown[]) => unknown) => void
+  onTabsUpdated: (callback: () => void) => () => void
+  onActiveTabChanged: (callback: (tabId: string | null) => void) => () => void
+  onTabInfoUpdated: (callback: (tabId: string) => void) => () => void
 
   // Settings Window specific API
   minimizeSettingsWindow: () => void
@@ -56,7 +50,6 @@ export interface WindowApi {
 
 declare global {
   interface Window {
-    electron: ElectronAPI
     api: WindowApi
   }
 }

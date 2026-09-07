@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { electronAPI as toolkitElectronAPI } from '@electron-toolkit/preload'
 
 /**
  * @file Preload script for the Electron application.
@@ -42,6 +41,8 @@ const api = {
   stop: (): void => ipcRenderer.send('stop'),
   /** Sends a message to open developer tools for the current tab. */
   openDevTools: (): void => ipcRenderer.send('open-dev-tools'),
+  openSettingsWindow: (): void => ipcRenderer.send('open-settings-window'),
+  showContextMenu: (x: number, y: number): void => ipcRenderer.send('show-context-menu', x, y),
   /**
    * Sends a message to update the bounds of the webview content area.
    * @param bounds - The new bounds (x, y, width, height).
@@ -85,35 +86,33 @@ const api = {
   /**
    * Registers a callback for the 'tabs-updated' event from the main process.
    * @param callback - The function to execute when tabs are updated.
-   * @returns The IpcRenderer instance.
+   * @returns A function that removes the listener.
    */
-  onTabsUpdated: (callback: () => void): Electron.IpcRenderer =>
-    ipcRenderer.on('tabs-updated', callback),
+  onTabsUpdated: (callback: () => void): (() => void) => {
+    const listener = (): void => callback()
+    ipcRenderer.on('tabs-updated', listener)
+    return () => ipcRenderer.removeListener('tabs-updated', listener)
+  },
   /**
    * Registers a callback for the 'active-tab-changed' event from the main process.
    * @param callback - The function to execute with the new active tab ID.
-   * @returns The IpcRenderer instance.
+   * @returns A function that removes the listener.
    */
-  onActiveTabChanged: (callback: (tabId: string | null) => void): Electron.IpcRenderer =>
-    ipcRenderer.on('active-tab-changed', (_event, tabId) => callback(tabId)),
+  onActiveTabChanged: (callback: (tabId: string | null) => void): (() => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, tabId: string | null): void =>
+      callback(tabId)
+    ipcRenderer.on('active-tab-changed', listener)
+    return () => ipcRenderer.removeListener('active-tab-changed', listener)
+  },
   /**
    * Registers a callback for the 'tab-info-updated' event from the main process.
    * @param callback - The function to execute with the ID of the updated tab.
-   * @returns The IpcRenderer instance.
+   * @returns A function that removes the listener.
    */
-  onTabInfoUpdated: (callback: (tabId: string) => void): Electron.IpcRenderer =>
-    ipcRenderer.on('tab-info-updated', (_event, tabId) => callback(tabId)),
-
-  /**
-   * Exposes a given function to the renderer's `window` object.
-   * This is a utility to make functions available globally in the renderer,
-   * bypassing `contextBridge` if direct window modification is desired (use with caution).
-   * @param functionName - The name the function will have on the `window` object.
-   * @param func - The function to expose.
-   */
-  exposeFunctionToWindow: (functionName: string, func: (...args: unknown[]) => unknown): void => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(window as any)[functionName] = func
+  onTabInfoUpdated: (callback: (tabId: string) => void): (() => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, tabId: string): void => callback(tabId)
+    ipcRenderer.on('tab-info-updated', listener)
+    return () => ipcRenderer.removeListener('tab-info-updated', listener)
   },
   /**
    * Invokes a handler in the main process to get application and system information.
@@ -130,22 +129,6 @@ const api = {
   }> => ipcRenderer.invoke('get-app-version-info')
 }
 
-// Use `contextBridge` to securely expose APIs to the renderer process
-// if context isolation is enabled. Otherwise, fall back to direct window assignment (less secure).
-if (process.contextIsolated) {
-  try {
-    // Expose the standard electronAPI from @electron-toolkit/preload
-    contextBridge.exposeInMainWorld('electron', toolkitElectronAPI)
-    // Expose the custom 'api' object
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error('Error exposing API via contextBridge:', error)
-  }
-} else {
-  // This fallback is for environments where contextIsolation is false.
-  // It's generally recommended to keep contextIsolation true for security.
-  // @ts-ignore (Type definitions are handled in index.d.ts)
-  window.electron = toolkitElectronAPI
-  // @ts-ignore (Type definitions are handled in index.d.ts)
-  window.api = api
-}
+// Expose only the browser operations needed by the renderer, rather than the unrestricted
+// ipcRenderer surface.
+contextBridge.exposeInMainWorld('api', api)
